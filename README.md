@@ -1,8 +1,8 @@
 # StealthSense: The Ultimate Open-Source PC Surveillance Solution
 
-  Keep your PC protected and secure with StealthSense, the open-source IP monitoring tool to never have to worry about theft and unauthorized "EvilTwin" attacks.
+  StealthSense is an open-source PC surveillance solution that provides protection against theft and unauthorized access through its IP monitoring capabilities.
 
-  StealthSense makes it simple to monitor your PC's IP address
+  StealthSense makes it simple to monitor your PC's location history
   Upon start-up, the tool checks for any changes and informs you via email if necessary. 
   This ensures that your device is always secure and protected.
 
