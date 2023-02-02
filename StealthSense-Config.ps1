@@ -1,9 +1,16 @@
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`"";
+    exit;
+}
+
+
 Write-Host '  ______                  _       _      ______                        '
 Write-Host ' / _____) _              | |  _  | |    / _____)                       '
 Write-Host '( (____ _| |_ _____ _____| |_| |_| |__ ( (____  _____ ____   ___ _____ '
 Write-Host ' \____ (_   _) ___ (____ | (_   _)  _ \ \____ \| ___ |  _ \ /___) ___ |'
 Write-Host ' _____) )| |_| ____/ ___ | | | |_| | | |_____) ) ____| | | |___ | ____|'
 Write-Host '(______/  \__)_____)_____|\_) \__)_| |_(______/|_____)_| |_(___/|_____)'
+Write-Host '                                                         By LogicBypass'
 Write-Host ""
 Write-Host ""
 Write-Host "StealthSense: Open-Source PC Surveillance Solution"
@@ -12,7 +19,7 @@ Write-Host "https://github.com/LogicBypass/StealthSense" -ForegroundColor Green
 Write-Host "https://www.linkedin.com/in/logicbypass/" -ForegroundColor Green
 Write-Host ""
 Write-Host ""
-Start-Sleep 2
+Start-Sleep 1
 Write-Host "Before you start you need to generate Gmail SMPT App Password" -ForegroundColor Red
 Write-Host "Follow the link and create a Gmail SMTP Password" 
 Write-Host "https://support.cloudways.com/en/articles/5131076-how-to-configure-gmail-smtp"  -ForegroundColor Green
@@ -40,7 +47,7 @@ for ($i = 1; $i -le $CountMailsToSend; $i++) {
 $ToUsersString = ($IteratedUsers -join ', ')
 
 
-$Export = @"
+$StealthSense = @"
 `$scriptpath = `$MyInvocation.MyCommand.Definition 
 [string]`$dir = Split-Path `$scriptpath  
 set-location `$dir
@@ -116,7 +123,7 @@ if (`$connection) {
     #Connection is down Schedule script to run again in 3 minutes
     LogWrite "`$LogTime `$oldip 'Internet connection is down'"
     `$taskName = "Scheduled IP Check"
-    `$action = New-ScheduledTaskAction -Execute `$dir"\startup.cmd" 
+    `$action = New-ScheduledTaskAction -Execute `"$dir\startup.cmd" 
     `$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(3)
     `$settings = New-ScheduledTaskSettingsSet
     Unregister-ScheduledTask -TaskName `$taskName -Confirm:`$false
@@ -125,4 +132,46 @@ if (`$connection) {
 "@
 
 
-$Export | Out-File .\StealthSense.ps1 -Force
+$StealthSense | Out-File .\StealthSense.ps1 -Force
+
+
+$Startup = @'
+@echo off
+Powershell -windowstyle hidden -noprofile -executionpolicy bypass -file ".\StealthSense.ps1" >> startup.log
+'@
+
+Set-Content -Path '.\Startup.cmd' -Value $Startup -Force
+
+
+$scriptPath = $MyInvocation.MyCommand.Definition 
+$dir = Split-Path $scriptPath  
+Set-Location $dir
+
+
+$taskName = "StealthSense"
+$action1 = New-ScheduledTaskAction -Execute "$dir\Startup.cmd" 
+$action2 = New-ScheduledTaskAction -Execute "startup.cmd" -WorkingDirectory "$dir"
+$actions = @($action1, $action2)
+$trigger = New-ScheduledTaskTrigger -AtStartup
+$trigger.Delay = "PT10S"
+$taskDescription = "StealthSense PC surveillance solution that provides protection against theft and unauthorized access through its IP monitoring capabilities"
+$taskSettings = New-ScheduledTaskSettingsSet 
+$taskSettings.DisallowStartIfOnBatteries = $false
+$taskSettings.StopIfGoingOnBatteries = $false
+$taskSettings.StartWhenAvailable = $true
+$taskSettings.idlesettings.StopOnIdleEnd = $false
+$taskSettings.MultipleInstances = 0
+$taskSettings.Enabled = $true
+$taskSettings.ExecutionTimeLimit = "PT0S"
+$principal = New-ScheduledTaskPrincipal -UserID "System" -LogonType ServiceAccount
+
+Register-ScheduledTask `
+-TaskName $taskName `
+-Action $actions `
+-Trigger $trigger `
+-Principal $principal `
+-Description $taskDescription `
+-Settings $taskSettings `
+-Force
+
+.\Startup.cmd
