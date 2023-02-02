@@ -31,7 +31,7 @@ if ($connection) {
 
     #Gmail settings
     $SMTPServer = "smtp.gmail.com"
-    $From = $
+    $From = $Gmail_Address
     $ToUsers = "Mail_Addresses1", "Mail_Addresses2", "Mail_Addresses3";
     $SMTPClient = New-Object Net.Mail.SmtpClient($SMTPServer, 587)
     $SMTPClient.EnableSsl = $true
