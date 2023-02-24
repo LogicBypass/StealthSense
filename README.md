@@ -64,6 +64,7 @@
 ---
       
 #### After Configuration, it will automaticaly add the script to "Task Scheduler" and generate 3 log files:
+  > Open Explorer and type: `%AppData%\StealthSense` to open StealthSense folder
   - startup.log - For debuging
   - Log_IP.log - For history logging (this history will be sent to email)
   - ip.txt - Last IP Address
