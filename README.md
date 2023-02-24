@@ -54,9 +54,8 @@
 
 
 ### 2. `StealthSense-Config.ps1` - Deployment:
-  1. Make a folder called "StealthSense" anywhere you wish.
-  2. Download `StealthSense-Config.ps1` in that folder
-  3. Run the `StealthSense-Config.ps1` </br>
+  1. Download `StealthSense-Config.ps1` in that folder
+  2. Run the `StealthSense-Config.ps1` </br>
     - On **Windows 11**: `(Right Click > Run with Powershell)` </br>
     - On **Windows 10**: `(Shift + Right Click > Run with Powershell)` </br>
   4. Press `Yes` and follow the instructions
