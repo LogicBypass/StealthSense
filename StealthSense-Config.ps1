@@ -113,7 +113,7 @@ if (`$connection) {
         }
     }
 
-    else {LogWrite "No Changes `$LogTime `$currentip"}
+    else {LogWrite "`$LogTime `$currentip No Changes"}
 
     `$currentip | Out-File .\ip.txt -Force
 
@@ -121,7 +121,7 @@ if (`$connection) {
 
 } else {
     #Connection is down Schedule script to run again in 3 minutes
-    LogWrite "`$LogTime `$oldip 'Internet connection is down'"
+    LogWrite "`$LogTime `$oldip Internet connection is down"
     `$taskName = "Scheduled IP Check"
     `$action = New-ScheduledTaskAction -Execute `"$dir\startup.cmd" 
     `$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(3)
